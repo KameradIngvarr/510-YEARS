@@ -1,0 +1,274 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+
+#viewport {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+}
+
+#viewport.dragging {
+  cursor: grabbing;
+}
+
+/* Fallout CRT Speech Bubble */
+#speech-bubble {
+  position: fixed;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  width: max-content;
+  max-width: calc(100% - 16px);
+  padding: 5px 10px;
+  background: rgba(12, 16, 11, 0.92);
+  border: 1px solid rgba(255, 182, 66, 0.82);
+  border-radius: 4px;
+  box-shadow: 0 0 14px rgba(255, 176, 46, 0.28), inset 0 0 10px rgba(255, 182, 66, 0.08);
+  color: #ffd07b;
+  font-size: 10.5px;
+  line-height: 1.26;
+  text-align: center;
+  letter-spacing: 0.25px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  z-index: 20;
+}
+
+#speech-bubble.sergeant {
+  border-color: rgba(255, 110, 58, 0.9);
+  box-shadow: 0 0 16px rgba(255, 96, 48, 0.34), inset 0 0 10px rgba(255, 110, 58, 0.12);
+  color: #ffd9b8;
+}
+
+#speech-bubble.sergeant #speech-tag {
+  color: #ff6e3a;
+}
+
+#speech-bubble.sergeant::after {
+  border-right-color: rgba(255, 110, 58, 0.9);
+  border-bottom-color: rgba(255, 110, 58, 0.9);
+}
+
+#speech-bubble.outpost {
+  border-color: rgba(92, 232, 168, 0.88);
+  box-shadow: 0 0 16px rgba(72, 218, 152, 0.28), inset 0 0 10px rgba(92, 232, 168, 0.1);
+  color: #b8ffdc;
+}
+
+#speech-bubble.outpost #speech-tag {
+  color: #5ce8a8;
+}
+
+#speech-bubble.outpost::after {
+  border-right-color: rgba(92, 232, 168, 0.88);
+  border-bottom-color: rgba(92, 232, 168, 0.88);
+}
+
+#speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 9px;
+  height: 9px;
+  background: rgba(12, 16, 11, 0.92);
+  border-right: 1px solid rgba(255, 182, 66, 0.82);
+  border-bottom: 1px solid rgba(255, 182, 66, 0.82);
+  pointer-events: none;
+}
+
+#speech-bubble::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 190, 70, 0.05) 0px,
+    rgba(255, 190, 70, 0.05) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+}
+
+#speech-bubble.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+#speech-tag {
+  display: block;
+  font-size: 9px;
+  font-weight: bold;
+  color: #ff9c2a;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+}
+
+/* Startup loader */
+#loader {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 7px 12px;
+  background: rgba(12, 16, 12, 0.88);
+  border: 1px solid rgba(255, 182, 66, 0.7);
+  border-radius: 4px;
+  color: #ffca6b;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 25;
+  transition: opacity 0.35s ease;
+}
+
+#loader.hidden {
+  opacity: 0;
+}
+
+/* Right-click Enclave Terminal Menu */
+#context-menu {
+  position: fixed;
+  min-width: 235px;
+  max-height: calc(100vh - 12px);
+  overflow-y: auto;
+  padding: 4px 0;
+  background: rgba(12, 16, 12, 0.95);
+  border: 1px solid rgba(255, 182, 66, 0.85);
+  border-radius: 4px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7), 0 0 14px rgba(255, 182, 66, 0.22);
+  color: #ffd382;
+  font-size: 11px;
+  z-index: 50;
+  display: none;
+}
+
+#context-menu.open {
+  display: block;
+}
+
+.menu-header {
+  padding: 3px 12px 5px;
+  font-size: 10px;
+  font-weight: bold;
+  color: #ff9f2e;
+  letter-spacing: 1.2px;
+  border-bottom: 1px solid rgba(255, 182, 66, 0.25);
+  margin-bottom: 3px;
+}
+
+.menu-sublabel {
+  padding: 2px 12px;
+  font-size: 9px;
+  font-weight: bold;
+  color: #ff9f2e;
+  letter-spacing: 0.9px;
+  opacity: 0.9;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.menu-item:hover {
+  background: rgba(255, 182, 66, 0.2);
+  color: #fff2cc;
+}
+
+.menu-item.danger:hover {
+  background: rgba(255, 86, 66, 0.24);
+  color: #ffb8ac;
+}
+
+.menu-sep {
+  height: 1px;
+  margin: 4px 8px;
+  background: rgba(255, 182, 66, 0.22);
+}
+
+.menu-check {
+  font-size: 10px;
+  color: #79ff9c;
+  font-weight: bold;
+}
+
+.menu-scale-row {
+  display: flex;
+  gap: 4px;
+  padding: 4px 12px 6px;
+}
+
+.scale-btn {
+  flex: 1;
+  background: rgba(255, 182, 66, 0.1);
+  border: 1px solid rgba(255, 182, 66, 0.4);
+  border-radius: 3px;
+  color: #ffd382;
+  font-family: inherit;
+  font-size: 10px;
+  padding: 3px 0;
+  cursor: pointer;
+}
+
+.scale-btn:hover,
+.scale-btn.active {
+  background: rgba(255, 182, 66, 0.34);
+  border-color: #ffd382;
+  color: #fff8e2;
+}
+
+.menu-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  font-size: 10px;
+  color: #ffd382;
+}
+
+.menu-slider-row > span:first-child {
+  width: 52px;
+  flex-shrink: 0;
+}
+
+.menu-slider-row input[type='range'] {
+  flex: 1;
+  min-width: 72px;
+  height: 4px;
+  accent-color: #ffb642;
+  cursor: pointer;
+}
+
+.menu-slider-row .vol-val {
+  width: 32px;
+  text-align: right;
+  font-size: 9px;
+  color: #79ff9c;
+  flex-shrink: 0;
+}

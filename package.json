@@ -1,0 +1,14 @@
+{
+  "name": "510-years",
+  "productName": "510 years",
+  "version": "1.0.0",
+  "description": "510 years — Animated Fallout Enclave Power Armor 3D Desktop Companion",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^35.0.0",
+    "three": "^0.174.0"
+  }
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' data: blob:; img-src 'self' data: blob:; media-src 'self' data: blob:;" />
+  <title>510 years</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "../node_modules/three/build/three.module.js",
+        "three/addons/": "../node_modules/three/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <canvas id="viewport"></canvas>
+
+  <div id="speech-bubble">
+    <span id="speech-tag">[РАДИО АНКЛАВА]</span>
+    <span id="speech-text">БОЕЦ СИЛОВОЙ БРОНИ MK II ГОТОВ К СЛУЖБЕ.</span>
+  </div>
+
+  <div id="loader">ЗАГРУЗКА БРОНИ MK II...</div>
+
+  <div id="context-menu">
+    <div class="menu-header">⚡ ТЕРМИНАЛ АНКЛАВА</div>
+    <div class="menu-item" data-action="fire"><span>Выстрел из оружия</span></div>
+    <div class="menu-item" data-action="inspect"><span>Проверить оружие</span></div>
+    <div class="menu-item" data-action="salute"><span>Воинское приветствие</span></div>
+    <div class="menu-item" data-action="scan"><span>Сканировать сектор</span></div>
+    <div class="menu-item" data-action="radio"><span>Радиодоклад</span></div>
+    <div class="menu-item" data-action="next-radio"><span>Следующий трек радио</span></div>
+    <div class="menu-sep"></div>
+    <div class="menu-item" data-action="toggle-patrol">
+      <span>Патрулирование</span>
+      <span class="menu-check" id="chk-patrol">ВКЛ</span>
+    </div>
+    <div class="menu-item" data-action="toggle-gravity">
+      <span>Гравитация к панели</span>
+      <span class="menu-check" id="chk-gravity">ВКЛ</span>
+    </div>
+    <div class="menu-item" data-action="toggle-sound">
+      <span>Звуковые эффекты</span>
+      <span class="menu-check" id="chk-sound">ВКЛ</span>
+    </div>
+    <div class="menu-item" data-action="toggle-eyebot">
+      <span>Робоглаз (Радио Анклава)</span>
+      <span class="menu-check" id="chk-eyebot">ВКЛ</span>
+    </div>
+    <div class="menu-item" data-action="toggle-sleep">
+      <span>Режим ожидания</span>
+      <span class="menu-check" id="chk-sleep">ВЫКЛ</span>
+    </div>
+    <div class="menu-item" data-action="toggle-autostart">
+      <span>Автозапуск с Windows</span>
+      <span class="menu-check" id="chk-autostart">ВЫКЛ</span>
+    </div>
+    <div class="menu-sep"></div>
+    <div class="menu-sublabel">ГРОМКОСТЬ</div>
+    <div class="menu-slider-row">
+      <span>Общая</span>
+      <input type="range" id="vol-master" min="0" max="100" value="100" />
+      <span class="vol-val" id="val-master">100%</span>
+    </div>
+    <div class="menu-slider-row">
+      <span>Голос</span>
+      <input type="range" id="vol-voice" min="0" max="100" value="85" />
+      <span class="vol-val" id="val-voice">85%</span>
+    </div>
+    <div class="menu-slider-row">
+      <span>Радио</span>
+      <input type="range" id="vol-radio" min="0" max="100" value="50" />
+      <span class="vol-val" id="val-radio">50%</span>
+    </div>
+    <div class="menu-slider-row">
+      <span>Эффекты</span>
+      <input type="range" id="vol-sfx" min="0" max="100" value="80" />
+      <span class="vol-val" id="val-sfx">80%</span>
+    </div>
+    <div class="menu-sep"></div>
+    <div class="menu-sublabel">РЕЖИМ ПЕРСОНАЖА</div>
+    <div class="menu-item voice-item" data-voice="sergeant">
+      <span>Режим-Сержанта (Дорнан)</span>
+      <span class="menu-check" id="chk-voice-sergeant">●</span>
+    </div>
+    <div class="menu-item voice-item" data-voice="outpost">
+      <span>Часовой / Связь (Наварро)</span>
+      <span class="menu-check" id="chk-voice-outpost"></span>
+    </div>
+    <div class="menu-sep"></div>
+    <div class="menu-sublabel">МОДЕЛЬ БРОНИ</div>
+    <div class="menu-item model-item" data-model="remnants">
+      <span>Броня Оставшихся (FNV)</span>
+      <span class="menu-check" id="chk-model-remnants">●</span>
+    </div>
+    <div class="menu-item model-item" data-model="gannon">
+      <span>Броня Гэннонов Тесла (FNV)</span>
+      <span class="menu-check" id="chk-model-gannon"></span>
+    </div>
+    <div class="menu-item model-item" data-model="enclave_fo3">
+      <span>Броня Анклава Mk II (FO3)</span>
+      <span class="menu-check" id="chk-model-enclave_fo3"></span>
+    </div>
+    <div class="menu-sep"></div>
+    <div class="menu-sublabel">ОРУЖИЕ</div>
+    <div class="menu-item weapon-item" data-weapon="gauss">
+      <span>Гаусс-винтовка</span>
+      <span class="menu-check" id="chk-weapon-gauss">●</span>
+    </div>
+    <div class="menu-item weapon-item" data-weapon="laser">
+      <span>Лазерная винтовка</span>
+      <span class="menu-check" id="chk-weapon-laser"></span>
+    </div>
+    <div class="menu-item weapon-item" data-weapon="plasma">
+      <span>Плазменная винтовка</span>
+      <span class="menu-check" id="chk-weapon-plasma"></span>
+    </div>
+    <div class="menu-sep"></div>
+    <div class="menu-scale-row">
+      <button class="scale-btn" data-scale="0.75">75%</button>
+      <button class="scale-btn active" data-scale="1">100%</button>
+      <button class="scale-btn" data-scale="1.3">130%</button>
+      <button class="scale-btn" data-scale="1.6">160%</button>
+    </div>
+    <div class="menu-sep"></div>
+    <div class="menu-item" data-action="reset-pos"><span>Вернуть на панель задач</span></div>
+    <div class="menu-item" data-action="hide"><span>Свернуть в трей</span></div>
+    <div class="menu-item danger" data-action="quit"><span>Завершить службу</span></div>
+  </div>
+
+  <script type="module" src="renderer.js"></script>
+</body>
+</html>
