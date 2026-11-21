@@ -52,25 +52,6 @@
 
 ---
 
-## Установка и запуск
-
-### Требования
-- **Windows** (10 / 11)
-- **Node.js** 18+ и `npm`
-
-### Запуск из исходников
-```bash
-git clone <url-вашего-репозитория>
-cd "510 years"
-npm install
-npm start
-```
-
-### Проверка без запуска GUI-сессии
-```bash
-npx electron . --no-sandbox --verify
-```
-
 ---
 
 ## Структура проекта
